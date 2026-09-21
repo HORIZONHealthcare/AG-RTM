@@ -1,9 +1,0 @@
-subject_id,image_path,biomarker_value
-P00001,/path/to/images/P00001_OD.jpeg,52
-P00002,/path/to/images/P00002_OS.jpeg,67
-P00003,/path/to/images/P00003_OD.jpeg,49
-P00004,/path/to/images/P00004_OS.jpeg,73
-P00005,/path/to/images/P00005_OD.jpeg,58
-P00006,/path/to/images/P00006_OS.jpeg,61
-P00007,/path/to/images/P00007_OD.jpeg,45
-P00008,/path/to/images/P00008_OS.jpeg,70

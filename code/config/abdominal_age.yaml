@@ -1,0 +1,98 @@
+# Abdominal Age: abdominal CT (Merlin), 2.5D DINOv3-Large,
+# 32 axial slices encoded one by one and averaged before the head.
+
+backbone:
+  version: "dinov3"
+  model: "large"
+  pretrained: true
+  img_size: 224
+  grad_checkpointing: true
+
+head:
+  hidden_dim: 32
+  dropout: 0.5
+
+input_mode: "ct25d"
+splits_dir: "${DATA_ROOT}/abdominal_age"
+train_csv_name: "train.csv"
+val_csv_name: "val.csv"
+test_csv_name: "test.csv"
+test_csv: ""
+test_name: ""
+eval_output_suffix: ""
+# Age target is normalised with the mean and SD of the training subset.
+biomarker_mean: 45.227937405568746
+biomarker_std: 17.00766309478063
+
+ct:
+  target_spacing_mm: 1.5          # isotropic resampling
+  body_threshold_hu: -950.0       # body mask threshold
+  body_margin_mm: 15.0            # crop margin around the body
+  background_hu: -1350.0          # value outside the body
+  axial_slices: 32
+  coronal_slices: 0
+  sagittal_slices: 0
+  min_aux_aspect_ratio: 0.25
+  min_body_component_fraction: 0.005
+  min_body_component_slenderness: 0.12
+  affine_degrees: 5.0             # training-time jitter
+  affine_translate: 0.03
+  affine_scale_min: 0.97
+  affine_scale_max: 1.03
+  aggregator: "axial_mean"
+  encoder_chunk_size: 64          # slices per backbone forward pass
+  aggregator_dim: 256             # used only by the transformer aggregators
+  transformer_layers: 2
+  transformer_heads: 8
+  transformer_dropout: 0.1
+
+# Training: full fine-tuning, up to 100 epochs, early stop after 15 epochs
+# without a validation-MAE gain of 0.01 (at least 30 epochs).
+train_mode: "finetune_all"
+finetune_k: 4
+batch_size: 16
+epochs: 100
+min_epochs: 30
+early_stop_patience: 15
+early_stop_min_delta: 0.01
+accum_iter: 1
+lr: null            # lr = blr * batch_size / 256
+blr: 5.0e-3
+min_lr: 1.0e-6
+weight_decay: 0.05
+layer_decay: 0.65
+warmup_epochs: 5
+clip_grad: 1.0
+
+# 2D image augmentation fields are required by the shared parser but unused
+# here; 2.5D inputs only get the small affine jitter above.
+color_jitter: null
+aa: "none"
+reprob: 0.0
+remode: "pixel"
+recount: 1
+
+device: "cuda"
+seed: 0
+num_workers: 16
+prefetch_factor: 1
+pin_mem: true
+
+world_size: 1
+local_rank: -1
+dist_on_itp: false
+dist_url: "env://"
+
+exp_name: ""
+output_dir: "./logs"
+save_model: true
+resume: ""
+eval: false
+dist_eval: false
+run_test_after_train: false
+start_epoch: 0
+
+# Balanced-age comparator (not the released model): set balanced_sampler true.
+balanced_sampler: false
+balanced_bin_width: 5
+balanced_min_count: 1

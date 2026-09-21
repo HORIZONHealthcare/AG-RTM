@@ -1,0 +1,4 @@
+subject_id,session_id,archive_path,biomarker_value
+patient_01,patient_01_session_1,/path/to/mri/patient_01_session_1_T1w.nii.gz,60.3
+patient_01,patient_01_session_2,/path/to/mri/patient_01_session_2_T1w.nii.gz,63.3
+patient_02,patient_02_session_1,/path/to/mri/patient_02_session_1.zip,71.8

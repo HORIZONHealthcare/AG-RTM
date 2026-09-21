@@ -1,0 +1,69 @@
+# Chest Age: frontal chest radiographs (ChestX-ray14), 2D DINOv3-Large.
+
+backbone:
+  version: "dinov3"
+  model: "large"
+  pretrained: true
+  img_size: 224
+
+head:
+  hidden_dim: 32
+  dropout: 0.5
+
+input_mode: "image2d"
+splits_dir: "${DATA_ROOT}/chest_age"
+train_csv_name: "train.csv"
+val_csv_name: "val.csv"
+test_csv_name: "test.csv"
+test_csv: ""
+test_name: ""
+eval_output_suffix: ""
+# Age target is normalised as (age - 50) / 50.
+biomarker_mean: 50
+biomarker_std: 50
+
+# Training: full fine-tuning, 50 epochs, checkpoint with the lowest validation MAE kept.
+train_mode: "finetune_all"
+finetune_k: 4
+batch_size: 32
+epochs: 50
+accum_iter: 1
+lr: null            # lr = blr * batch_size / 256
+blr: 5.0e-3
+min_lr: 1.0e-6
+weight_decay: 0.05
+layer_decay: 0.65
+warmup_epochs: 10
+clip_grad: 1.0
+
+# Augmentation (as in RETFound)
+color_jitter: null
+aa: "rand-m9-mstd0.5-inc1"
+reprob: 0.25
+remode: "pixel"
+recount: 1
+
+device: "cuda"
+seed: 0
+num_workers: 10
+prefetch_factor: 2
+pin_mem: true
+
+world_size: 1
+local_rank: -1
+dist_on_itp: false
+dist_url: "env://"
+
+exp_name: ""
+output_dir: "./logs"
+save_model: true
+resume: ""
+eval: false
+dist_eval: false
+run_test_after_train: false
+start_epoch: 0
+
+# Balanced-age comparator (not the released model): set balanced_sampler true.
+balanced_sampler: false
+balanced_bin_width: 5
+balanced_min_count: 1

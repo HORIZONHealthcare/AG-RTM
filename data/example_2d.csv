@@ -1,0 +1,4 @@
+subject_id,image_path,biomarker_value
+image_0001.png,/path/to/images/image_0001.png,58
+image_0002.png,/path/to/images/image_0002.png,71
+image_0003.png,/path/to/images/image_0003.png,44

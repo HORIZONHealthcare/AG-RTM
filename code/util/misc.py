@@ -191,9 +191,18 @@ def is_main_process():
     return get_rank() == 0
 
 
-def save_on_master(*args, **kwargs):
-    if is_main_process():
-        torch.save(*args, **kwargs)
+def save_on_master(obj, checkpoint_path, *args, **kwargs):
+    """Atomically replace a checkpoint so a timeout cannot corrupt latest."""
+    if not is_main_process():
+        return
+    checkpoint_path = os.fspath(checkpoint_path)
+    temporary_path = f"{checkpoint_path}.tmp.{os.getpid()}"
+    try:
+        torch.save(obj, temporary_path, *args, **kwargs)
+        os.replace(temporary_path, checkpoint_path)
+    finally:
+        if os.path.exists(temporary_path):
+            os.unlink(temporary_path)
 
 
 def init_distributed_mode(args):
@@ -209,9 +218,18 @@ def init_distributed_mode(args):
         args.rank = int(os.environ["RANK"])
         args.world_size = int(os.environ['WORLD_SIZE'])
         args.gpu = int(os.environ['LOCAL_RANK'])
-    elif 'SLURM_PROCID' in os.environ:
+    elif (
+        'SLURM_PROCID' in os.environ
+        and int(os.environ.get('SLURM_NTASKS', '1')) > 1
+    ):
         args.rank = int(os.environ['SLURM_PROCID'])
-        args.gpu = args.rank % torch.cuda.device_count()
+        args.world_size = int(os.environ['SLURM_NTASKS'])
+        args.gpu = int(
+            os.environ.get(
+                'SLURM_LOCALID',
+                args.rank % max(1, torch.cuda.device_count()),
+            )
+        )
     else:
         print('Not using distributed mode')
         setup_for_distributed(is_master=True)
@@ -277,6 +295,19 @@ def get_grad_norm_(parameters, norm_type: float = 2.0) -> torch.Tensor:
 def save_model(args, epoch, model, model_without_ddp, optimizer, loss_scaler, mode):
     exp_dir = os.path.join(args.output_dir, args.exp_name)
     os.makedirs(exp_dir, exist_ok=True)
+    model_state = model_without_ddp.state_dict()
+    # Frozen DINO weights are reproducibly restored from the pinned pretrained
+    # cache. Omitting them keeps each 2.5D linear-probe checkpoint compact while
+    # retaining every trainable aggregator/head tensor.
+    if (
+        getattr(args, 'input_mode', None) in {'ct25d', 'mri25d'}
+        and getattr(args, 'train_mode', None) == 'linear_probe'
+    ):
+        model_state = {
+            name: value
+            for name, value in model_state.items()
+            if not name.startswith('backbone.')
+        }
     if loss_scaler is not None:
         if mode == 'best':
             checkpoint_paths = [os.path.join(exp_dir, 'checkpoint.pth')]
@@ -285,24 +316,18 @@ def save_model(args, epoch, model, model_without_ddp, optimizer, loss_scaler, mo
         for checkpoint_path in checkpoint_paths:
             if mode == 'best':
                 to_save = {
-                    'model': model_without_ddp.state_dict(),
+                    'model': model_state,
                     'epoch': epoch,
                     'args': args,
                 }
             else:
-                if epoch == args.epochs - 1:
-                    to_save = {
-                        'model': model_without_ddp.state_dict(),
-                        'args': args,
-                    }
-                else:
-                    to_save = {
-                        'model': model_without_ddp.state_dict(),
-                        'optimizer': optimizer.state_dict(),
-                        'epoch': epoch,
-                        'scaler': loss_scaler.state_dict(),
-                        'args': args,
-                    }
+                to_save = {
+                    'model': model_state,
+                    'optimizer': optimizer.state_dict(),
+                    'epoch': epoch,
+                    'scaler': loss_scaler.state_dict(),
+                    'args': args,
+                }
             save_on_master(to_save, checkpoint_path)
     else:
         if mode == 'best':
@@ -332,7 +357,11 @@ def load_model(args, model_without_ddp, optimizer, loss_scaler):
             checkpoint = torch.hub.load_state_dict_from_url(
                 args.resume, map_location='cpu', check_hash=True)
         else:
-            checkpoint = torch.load(args.resume, map_location='cpu')
+            # Project checkpoints include argparse.Namespace; PyTorch 2.6
+            # therefore requires the trusted legacy checkpoint loader.
+            checkpoint = torch.load(
+                args.resume, map_location='cpu', weights_only=False
+            )
         if 'model' in checkpoint:
             checkpoint_model = checkpoint['model']
         else:

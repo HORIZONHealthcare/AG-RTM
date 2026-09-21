@@ -1,0 +1,4 @@
+subject_id,image_path,biomarker_value
+ct_0001,/path/to/ct/ct_0001.nii.gz,64.4
+ct_0002,/path/to/ct/ct_0002.nii.gz,22.6
+ct_0003,/path/to/ct/ct_0003.nii.gz,48.1

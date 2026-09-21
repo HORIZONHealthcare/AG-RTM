@@ -1,0 +1,13 @@
+# Install with the PyTorch CUDA 12.1 wheel index:
+#   pip install -r requirements.txt --extra-index-url https://download.pytorch.org/whl/cu121
+torch==2.5.1
+torchvision==0.20.1
+timm~=1.0.22
+numpy~=1.26.4
+pandas~=2.2.3
+scipy~=1.14.1
+Pillow~=10.4.0
+PyYAML~=6.0.2
+nibabel~=5.3.2
+tensorboard~=2.18.0
+huggingface-hub~=0.36.0
