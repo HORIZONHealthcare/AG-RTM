@@ -153,6 +153,4 @@ The code and documentation are released under [CC BY-NC 4.0](LICENSE). The model
 
 ## Contact
 
-For research enquiries, contact [Yukun Zhou](mailto:yukun.zhou.19@ucl.ac.uk).
-
-Template prepared for [HORIZON](https://github.com/HORIZONHealthcare).
+For research enquiries, contact [Yukun Zhou](mailto:yukun.zhou.19@ucl.ac.uk) or [Yiqun Lin](mailto:yiqun.lin@ucl.ac.uk).
