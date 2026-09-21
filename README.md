@@ -39,7 +39,7 @@ Test MAE is reported on each cohort's test subset, as in the paper: 65,360 image
 Install the environment and dependencies:
 
 ```bash
-git clone https://github.com/HORIZONHealthcare/RAG-RTM.git AG-RTM
+git clone https://github.com/HORIZONHealthcare/AG-RTM.git
 cd AG-RTM
 conda create -n ag-rtm python=3.11 -y
 conda activate ag-rtm
