@@ -26,9 +26,9 @@ Yiqun Lin, Ariel Yuhan Ong, Matthew Yu Heng Wong and colleagues · Preprint, *Re
 | Model | Input | Training data | Test MAE (years) | Weights |
 |---|---|---|---:|---|
 | Retinal Age | Colour fundus photograph (2D) | AlzEye | 5.31 | [lyqun/AG-RTM-RetinalAge](https://huggingface.co/lyqun/AG-RTM-RetinalAge) (access on request) |
-| Chest Age | Frontal chest radiograph (2D) | ChestX-ray14 | 5.15 | [lyqun/AG-RTM-ChestAge](https://huggingface.co/lyqun/AG-RTM-ChestAge) |
-| Abdominal Age | Abdominal CT (2.5D, 32 axial slices) | Merlin | 4.04 | [lyqun/AG-RTM-AbdominalAge](https://huggingface.co/lyqun/AG-RTM-AbdominalAge) |
-| Brain Age | T1-weighted brain MRI (2.5D, 32 axial slices) | OASIS-3 | 3.81 | [lyqun/AG-RTM-BrainAge](https://huggingface.co/lyqun/AG-RTM-BrainAge) |
+| Chest Age | Frontal chest radiograph (2D) | ChestX-ray14 | 5.15 | [lyqun/AG-RTM](https://huggingface.co/lyqun/AG-RTM) |
+| Abdominal Age | Abdominal CT (2.5D, 32 axial slices) | Merlin | 4.04 | [lyqun/AG-RTM](https://huggingface.co/lyqun/AG-RTM) |
+| Brain Age | T1-weighted brain MRI (2.5D, 32 axial slices) | OASIS-3 | 3.81 | [lyqun/AG-RTM](https://huggingface.co/lyqun/AG-RTM) |
 
 Test MAE is reported on each cohort's test subset, as in the paper: 65,360 images (Retinal Age), 21,733 radiographs (Chest Age), 4,984 volumes (Abdominal Age) and 1,454 sessions (Brain Age). Each model was trained on healthy patients only. The checkpoint with the lowest validation MAE was kept.
 
@@ -60,9 +60,9 @@ In the paper, the other three models read lossless files (PNG and NIfTI), so the
 | Resource | Link | Use |
 |---|---|---|
 | Retinal Age model | [Model card](https://huggingface.co/lyqun/AG-RTM-RetinalAge) · [Checkpoint file](https://huggingface.co/lyqun/AG-RTM-RetinalAge/blob/main/retinal_age.pth) | Colour fundus photographs; access on request |
-| Chest Age model | [Model card](https://huggingface.co/lyqun/AG-RTM-ChestAge) · [Checkpoint file](https://huggingface.co/lyqun/AG-RTM-ChestAge/blob/main/chest_age.pth) | Frontal chest radiographs |
-| Abdominal Age model | [Model card](https://huggingface.co/lyqun/AG-RTM-AbdominalAge) · [Checkpoint file](https://huggingface.co/lyqun/AG-RTM-AbdominalAge/blob/main/abdominal_age.pth) | Abdominal CT volumes (NIfTI) |
-| Brain Age model | [Model card](https://huggingface.co/lyqun/AG-RTM-BrainAge) · [Checkpoint file](https://huggingface.co/lyqun/AG-RTM-BrainAge/blob/main/brain_age.pth) | T1-weighted brain MRI (NIfTI) |
+| Chest Age model | [Model card](https://huggingface.co/lyqun/AG-RTM) · [Checkpoint file](https://huggingface.co/lyqun/AG-RTM/blob/main/chest_age.pth) | Frontal chest radiographs |
+| Abdominal Age model | [Model card](https://huggingface.co/lyqun/AG-RTM) · [Checkpoint file](https://huggingface.co/lyqun/AG-RTM/blob/main/abdominal_age.pth) | Abdominal CT volumes (NIfTI) |
+| Brain Age model | [Model card](https://huggingface.co/lyqun/AG-RTM) · [Checkpoint file](https://huggingface.co/lyqun/AG-RTM/blob/main/brain_age.pth) | T1-weighted brain MRI (NIfTI) |
 | ChestX-ray14 | [NIH Clinical Center](https://nihcc.app.box.com/v/ChestXray-NIHCC) | Public download |
 | Merlin | [Stanford AIMI](https://stanfordaimi.azurewebsites.net/datasets/60b9c7ff-877b-48ce-96c3-0194c8205c40) | After its data use agreement |
 | OASIS-3 | [OASIS](https://www.oasis-brains.org) | After the OASIS data use agreement |
@@ -71,8 +71,10 @@ In the paper, the other three models read lossless files (PNG and NIfTI), so the
 Download a checkpoint into `weights/`:
 
 ```bash
-hf download lyqun/AG-RTM-ChestAge chest_age.pth --local-dir weights
+hf download lyqun/AG-RTM chest_age.pth --local-dir weights
 ```
+
+Chest, Abdominal and Brain Age share one repository, [lyqun/AG-RTM](https://huggingface.co/lyqun/AG-RTM); `hf download lyqun/AG-RTM --local-dir weights` downloads all three.
 
 The Retinal Age model was trained on restricted NHS data. Request access on its model page first. Then log in with `hf auth login` in the environment created above before you download it.
 
