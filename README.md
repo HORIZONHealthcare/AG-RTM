@@ -25,10 +25,10 @@ Yiqun Lin, Ariel Yuhan Ong, Matthew Yu Heng Wong and colleagues · Preprint, *Re
 
 | Model | Input | Training data | Test MAE (years) | Weights |
 |---|---|---|---:|---|
-| Retinal Age | Colour fundus photograph (2D) | AlzEye | 5.31 | [lyqun/AG-RTM-RetinalAge](https://huggingface.co/lyqun/AG-RTM-RetinalAge) (access on request) |
-| Chest Age | Frontal chest radiograph (2D) | ChestX-ray14 | 5.15 | [lyqun/AG-RTM](https://huggingface.co/lyqun/AG-RTM) (short form, approved automatically) |
-| Abdominal Age | Abdominal CT (2.5D, 32 axial slices) | Merlin | 4.04 | [lyqun/AG-RTM](https://huggingface.co/lyqun/AG-RTM) (short form, approved automatically) |
-| Brain Age | T1-weighted brain MRI (2.5D, 32 axial slices) | OASIS-3 | 3.81 | [lyqun/AG-RTM](https://huggingface.co/lyqun/AG-RTM) (short form, approved automatically) |
+| Retinal Age | Colour fundus photograph (2D) | AlzEye | 5.31 | [lyqun/AG-RTM](https://huggingface.co/lyqun/AG-RTM) |
+| Chest Age | Frontal chest radiograph (2D) | ChestX-ray14 | 5.15 | [lyqun/AG-RTM](https://huggingface.co/lyqun/AG-RTM) |
+| Abdominal Age | Abdominal CT (2.5D, 32 axial slices) | Merlin | 4.04 | [lyqun/AG-RTM](https://huggingface.co/lyqun/AG-RTM) |
+| Brain Age | T1-weighted brain MRI (2.5D, 32 axial slices) | OASIS-3 | 3.81 | [lyqun/AG-RTM](https://huggingface.co/lyqun/AG-RTM) |
 
 Test MAE is reported on each cohort's test subset, as in the paper: 65,360 images (Retinal Age), 21,733 radiographs (Chest Age), 4,984 volumes (Abdominal Age) and 1,454 sessions (Brain Age). Each model was trained on healthy patients only. The checkpoint with the lowest validation MAE was kept.
 
@@ -59,7 +59,7 @@ In the paper, the other three models read lossless files (PNG and NIfTI), so the
 
 | Resource | Link | Use |
 |---|---|---|
-| Retinal Age model | [Model card](https://huggingface.co/lyqun/AG-RTM-RetinalAge) · [Checkpoint file](https://huggingface.co/lyqun/AG-RTM-RetinalAge/blob/main/retinal_age.pth) | Colour fundus photographs; access on request |
+| Retinal Age model | [Model card](https://huggingface.co/lyqun/AG-RTM) · [Checkpoint file](https://huggingface.co/lyqun/AG-RTM/blob/main/retinal_age.pth) | Colour fundus photographs |
 | Chest Age model | [Model card](https://huggingface.co/lyqun/AG-RTM) · [Checkpoint file](https://huggingface.co/lyqun/AG-RTM/blob/main/chest_age.pth) | Frontal chest radiographs |
 | Abdominal Age model | [Model card](https://huggingface.co/lyqun/AG-RTM) · [Checkpoint file](https://huggingface.co/lyqun/AG-RTM/blob/main/abdominal_age.pth) | Abdominal CT volumes (NIfTI) |
 | Brain Age model | [Model card](https://huggingface.co/lyqun/AG-RTM) · [Checkpoint file](https://huggingface.co/lyqun/AG-RTM/blob/main/brain_age.pth) | T1-weighted brain MRI (NIfTI) |
@@ -68,7 +68,7 @@ In the paper, the other three models read lossless files (PNG and NIfTI), so the
 | OASIS-3 | [OASIS](https://www.oasis-brains.org) | After the OASIS data use agreement |
 | AlzEye | [INSIGHT Health Data Research Hub](https://www.insight.hdrhub.org/insight-data) | Controlled access; see the paper's Data availability |
 
-Chest, Abdominal and Brain Age share one repository, [lyqun/AG-RTM](https://huggingface.co/lyqun/AG-RTM). Fill in the short form on its page first; access is granted straight away. The Retinal Age model was trained on restricted NHS data: request access on [its page](https://huggingface.co/lyqun/AG-RTM-RetinalAge), and download it once the request is approved.
+All four models are in one Hugging Face repository, [lyqun/AG-RTM](https://huggingface.co/lyqun/AG-RTM). Fill in the short form on its page first; access is granted straight away.
 
 Then log in and download a checkpoint into `weights/`:
 
@@ -77,7 +77,7 @@ hf auth login
 hf download lyqun/AG-RTM chest_age.pth --local-dir weights
 ```
 
-`hf download lyqun/AG-RTM --local-dir weights` downloads all three models in that repository.
+`hf download lyqun/AG-RTM --local-dir weights` downloads all four models.
 
 Each model reads a CSV file with one row per image or volume. See [`data/README.md`](data/README.md) for the columns and the image preparation each model expects.
 
@@ -152,7 +152,7 @@ The OASIS-3 data use agreement asks for this acknowledgement: "Data were provide
 
 ## License
 
-The code and documentation are released under [CC BY-NC 4.0](LICENSE). The model weights are fine-tuned from DINOv3, so they are distributed under the [DINOv3 License](LICENSE-DINOv3.md). Use of the weights must also respect the terms of the dataset each model was trained on. The models are for research use only and are not medical devices.
+The code, documentation and model weights are released under [CC BY-NC 4.0](LICENSE). The weights are fine-tuned from DINOv3, so the [DINOv3 License](LICENSE-DINOv3.md) also applies to them. Use of the weights must also respect the terms of the dataset each model was trained on. The models are for research use only and are not medical devices.
 
 ## Contact
 
