@@ -26,9 +26,9 @@ Yiqun Lin, Ariel Yuhan Ong, Matthew Yu Heng Wong and colleagues · Preprint, *Re
 | Model | Input | Training data | Test MAE (years) | Weights |
 |---|---|---|---:|---|
 | Retinal Age | Colour fundus photograph (2D) | AlzEye | 5.31 | [lyqun/AG-RTM-RetinalAge](https://huggingface.co/lyqun/AG-RTM-RetinalAge) (access on request) |
-| Chest Age | Frontal chest radiograph (2D) | ChestX-ray14 | 5.15 | [lyqun/AG-RTM](https://huggingface.co/lyqun/AG-RTM) |
-| Abdominal Age | Abdominal CT (2.5D, 32 axial slices) | Merlin | 4.04 | [lyqun/AG-RTM](https://huggingface.co/lyqun/AG-RTM) |
-| Brain Age | T1-weighted brain MRI (2.5D, 32 axial slices) | OASIS-3 | 3.81 | [lyqun/AG-RTM](https://huggingface.co/lyqun/AG-RTM) |
+| Chest Age | Frontal chest radiograph (2D) | ChestX-ray14 | 5.15 | [lyqun/AG-RTM](https://huggingface.co/lyqun/AG-RTM) (short form, approved automatically) |
+| Abdominal Age | Abdominal CT (2.5D, 32 axial slices) | Merlin | 4.04 | [lyqun/AG-RTM](https://huggingface.co/lyqun/AG-RTM) (short form, approved automatically) |
+| Brain Age | T1-weighted brain MRI (2.5D, 32 axial slices) | OASIS-3 | 3.81 | [lyqun/AG-RTM](https://huggingface.co/lyqun/AG-RTM) (short form, approved automatically) |
 
 Test MAE is reported on each cohort's test subset, as in the paper: 65,360 images (Retinal Age), 21,733 radiographs (Chest Age), 4,984 volumes (Abdominal Age) and 1,454 sessions (Brain Age). Each model was trained on healthy patients only. The checkpoint with the lowest validation MAE was kept.
 
@@ -68,15 +68,16 @@ In the paper, the other three models read lossless files (PNG and NIfTI), so the
 | OASIS-3 | [OASIS](https://www.oasis-brains.org) | After the OASIS data use agreement |
 | AlzEye | [INSIGHT Health Data Research Hub](https://www.insight.hdrhub.org/insight-data) | Controlled access; see the paper's Data availability |
 
-Download a checkpoint into `weights/`:
+Chest, Abdominal and Brain Age share one repository, [lyqun/AG-RTM](https://huggingface.co/lyqun/AG-RTM). Fill in the short form on its page first; access is granted straight away. The Retinal Age model was trained on restricted NHS data: request access on [its page](https://huggingface.co/lyqun/AG-RTM-RetinalAge), and download it once the request is approved.
+
+Then log in and download a checkpoint into `weights/`:
 
 ```bash
+hf auth login
 hf download lyqun/AG-RTM chest_age.pth --local-dir weights
 ```
 
-Chest, Abdominal and Brain Age share one repository, [lyqun/AG-RTM](https://huggingface.co/lyqun/AG-RTM); `hf download lyqun/AG-RTM --local-dir weights` downloads all three.
-
-The Retinal Age model was trained on restricted NHS data. Request access on its model page first. Then log in with `hf auth login` in the environment created above before you download it.
+`hf download lyqun/AG-RTM --local-dir weights` downloads all three models in that repository.
 
 Each model reads a CSV file with one row per image or volume. See [`data/README.md`](data/README.md) for the columns and the image preparation each model expects.
 
