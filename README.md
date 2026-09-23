@@ -152,7 +152,7 @@ The OASIS-3 data use agreement asks for this acknowledgement: "Data were provide
 
 ## License
 
-The code, documentation and model weights are released under [CC BY-NC 4.0](LICENSE). The weights are fine-tuned from DINOv3, so the [DINOv3 License](LICENSE-DINOv3.md) also applies to them. Use of the weights must also respect the terms of the dataset each model was trained on. The models are for research use only and are not medical devices.
+The code, documentation and model weights are released under [CC BY-NC 4.0](LICENSE). Use of the weights must also respect the terms of the dataset each model was trained on. The models are for research use only and are not medical devices.
 
 ## Contact
 
